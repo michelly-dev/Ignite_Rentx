@@ -11,7 +11,7 @@ class ImportCatrgoryUseCase {
   constructor(private categoriesReposity: ICategoryRepository) { }
 
   loadCategories(file: Express.Multer.File): Promise<IImportCategory[]> {
-    return new Promise((resolve, rejcte) => {
+    return new Promise((resolve, rejecte) => {
       const stream = fs.createReadStream(file.path);
       const categories: IImportCategory[] = [];
 
@@ -28,10 +28,11 @@ class ImportCatrgoryUseCase {
         });
       })
         .on("end", () => {
+          fs.promises.unlink(file.path);
           resolve(categories);
         })
         .on("error", (err) => {
-          rejcte(err);
+          rejecte(err);
         });
     })
   }
