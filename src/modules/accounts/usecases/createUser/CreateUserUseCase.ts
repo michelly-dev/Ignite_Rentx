@@ -3,6 +3,7 @@ import { hash } from "bcrypt";
 
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
 import { IUsersRepository } from "../../repositories/implementations/IUsersRepository";
+import { AppError } from "../../../../errors/AppError";
 
 @injectable()
 class CreateUserUseCase {
@@ -16,7 +17,7 @@ class CreateUserUseCase {
     const userAlreadExists = await this.usersRepository.findByEmail(email);
 
     if (userAlreadExists) {
-      throw new Error("User alread exusts");
+      throw new AppError("User alread exusts");
     }
 
     const passwordHash = await hash(password, 8);

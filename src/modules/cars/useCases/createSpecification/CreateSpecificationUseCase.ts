@@ -1,4 +1,5 @@
 import { inject, injectable } from "tsyringe";
+import { AppError } from "../../../../errors/AppError";
 import { ISpecificatiosRepository } from "../../repositories/ISpecificatiosRepository";
 
 interface IRequest {
@@ -15,7 +16,7 @@ class CreateSpecificationUseCase {
     const specificationAlreadExists = await this.specificationsRepository.findByName(name);
 
     if (specificationAlreadExists) {
-      throw new Error("Category Already exists!");
+      throw new AppError("Token missing!", 401);
     }
 
     await this.specificationsRepository.create({
