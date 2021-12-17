@@ -1,5 +1,6 @@
 import { AppError } from "@shared/errors/AppError";
 import { IRentalsRepository } from "@modules/rentals/repositories/IRentalsRepository";
+import { Rental } from "@modules/rentals/infra/typeorm/entities/Rental";
 
 
 interface IRequest {
@@ -17,7 +18,7 @@ class CreateRentalUseCase {
     user_id,
     car_id,
     expected_return_date
-  }: IRequest): Promise<void> {
+  }: IRequest): Promise<Rental> {
     const carUnavailable = await this.rentalsRepository.findOpenRentalByCar(car_id);
 
     if (carUnavailable) {
@@ -30,6 +31,13 @@ class CreateRentalUseCase {
       throw new AppError("There's a rental in progress for user!");
     }
 
+    const rental = await this.rentalsRepository.create({
+      user_id,
+      car_id,
+      expected_return_date,
+    });
+
+    return rental;
   }
 }
 
